@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Form</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-info">
+
+    <div class="text-center p-5">
+        <h1>Welcome to Zumba Class</h1>
+        <p>Please Choose one of the following options</p>
+    </div>
+
+    <div class="container">
+
+        <h1>Select an option</h1>
+
+        <select id="myDropdown">
+            <option value="">-- Choose an option --</option>
+
+            {% for option in options %}
+                <option value="{{ option }}">{{ option }}</option>
+            {% endfor %}
+        </select>
+
+        <p>
+            Selected option:
+            <span id="selectedOption"></span>
+        </p>
+
+        <p id="result"></p>
+
+        <!-- Participant field -->
+        <div id="participantField" style="display: none;">
+            <label>Participant name:</label>
+            <input type="text" id="participantName">
+        </div>
+
+        <br>
+
+        <form action="/submit" method="POST">
+
+            <label>Name:</label>
+            <input type="text" name="name">
+
+            <br><br>
+
+            <label>Email:</label>
+            <input type="email" name="email">
+
+            <br><br>
+
+            <button type="submit">Submit</button>
+
+        </form>
+
+    </div>
+
+
+    <script>
+
+        const dropdown = document.getElementById("myDropdown");
+        const selectedOption = document.getElementById("selectedOption");
+        const result = document.getElementById("result");
+        const participantField = document.getElementById("participantField");
+
+
+        dropdown.addEventListener("change", function() {
+
+            selectedOption.textContent = dropdown.value;
+
+
+            fetch("/select", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    option: dropdown.value
+                })
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                result.textContent = data.message;
+
+
+                if (data.show_field) {
+                    participantField.style.display = "block";
+                } else {
+                    participantField.style.display = "none";
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
