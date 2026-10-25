@@ -32,6 +32,34 @@ danceTypes = [
     "Merengue"
 ]
 
+participants = [
+    {
+        "name": "Alice",
+        "age": 25,
+        "birthday": "2001-05-10",
+        "gender": "girl",
+        "level": "beginner",
+        "danceType": "salsa"
+    },
+    {
+        "name": "Bob",
+        "age": 30,
+        "birthday": "1996-03-15",
+        "gender": "boy",
+        "level": "advanced",
+        "danceType": "bachata"
+    },
+    {
+        "name": "Sarah",
+        "age": 22,
+        "birthday": "2004-08-20",
+        "gender": "girl",
+        "level": "intermediaire",
+        "danceType": "Hip Hop"
+    }
+]
+
+
 
 @app.route("/")
 def home():
@@ -49,14 +77,19 @@ def select():
     data = request.get_json()
     option = data["option"]
 
+
     show_add_form = False
+    show_participants = False
     show_field = False
+    show_participants_only = False # added by Claudia
 
     if option == options[0]:
-        message = "Participant 1, 2, 3."
+        message = "here are all the participants"
+        show_participants_only = True # added by Claudia
 
     elif option == options[1]:
         message = "Participants 1, 2, 3."
+        show_participants = True
 
     elif option == options[2]:
         message = "Participants 1, 2, 3."
@@ -86,8 +119,12 @@ def select():
     return {
         "message": message,
         "show_field": show_field,
-        "show_add_form": show_add_form
+        "show_add_form": show_add_form,
+        "show_participants":show_participants,
+        "show_participants_only":show_participants_only,
+        "participants": participants #added by Claudia
     }
+    
 
 
 @app.route("/submit", methods=["POST"])
